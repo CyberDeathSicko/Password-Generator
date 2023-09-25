@@ -51,7 +51,12 @@ const copyButton = document.getElementById('copyButton');
 
 generateButton.addEventListener('click', () => {
     const generatedPassword = generateSecurePassword(passwordLength);
-    passwordInput.value = generatedPassword;
+    
+    const salt = user.ddr.salt; // Replace 'user.ddr.salt' with your actual salt value
+    const key = crypto.pbkdf2Sync(generatedPassword, salt, 100000, 512, 'sha512');
+    const encodedPassword = key.toString('hex');
+
+    passwordInput.value = generatedPassword; // Display the generated password (not the hashed one)
     display.textContent = 'Your Password Has Been Generated';
 });
 
@@ -61,4 +66,5 @@ copyButton.addEventListener('click', () => {
         document.execCommand('copy');
         display.textContent = 'Password Copied to Clipboard';
     }
+});
 });
